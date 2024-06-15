@@ -18,12 +18,15 @@ def home():
 
 @app.route("/train")
 def train_pipeline():
-    try:
-        train_pipelines = TrainingPipeline()
+    try:        
+        train_pipeline = TrainingPipeline()
+        print("class instance")
+        train_arr, test_arr,preprocessor_path = train_pipeline.run_pipeline()
+        print("class method  successfully call")
         
-        file_path = train_pipelines.start_data_ingestion()
-        print(f"Pipeline Result: {file_path}")
-        return jsonify({'feature_store_file_path':(file_path)}) # Returning a valid JSON response
+        return jsonify({"message": "Pipeline executed successfully{train_arr.shape}{test_arr.shape}{preprocessor_path.shape}"})
+    
+    
     
     except Exception as e:
         CustomException(e,sys)
