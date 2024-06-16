@@ -21,10 +21,8 @@ def train_pipeline():
     try:        
         train_pipeline = TrainingPipeline()
         print("class instance")
-        train_arr, test_arr,preprocessor_path = train_pipeline.run_pipeline()
-        print("class method  successfully call")
-        
-        return jsonify({"message": "Pipeline executed successfully{train_arr.shape}{test_arr.shape}{preprocessor_path.shape}"})
+        train_pipeline.run_pipeline()
+        return jsonify({"message": "Pipeline executed successfully"}), 200
     
     
     
