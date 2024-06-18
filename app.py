@@ -4,10 +4,10 @@ from  flask import Flask, render_template, jsonify, request, send_file
 from src.exception import CustomException
 from src.logger import logging as lg
 
-# step 1 [ Data Ingestion]
+# step 1 
 from src.pipeline.train_pipeline import TrainingPipeline
-
-# from src.pipeline.predict_pipeline import PredictionPipeline
+# step 2
+from src.pipeline.predict_pipeline import PredictionPipeline
 
 app = Flask(__name__)
 
@@ -28,7 +28,21 @@ def train_pipeline():
     
     except Exception as e:
         CustomException(e,sys)
-    
+
+@app.route("/predict",methods = ['POST','GET'])
+def upload():
+    try:
+        if request.method == 'POST':   
+            prediction_pipeline = PredictionPipeline(request)
+            prediction_file_detail=prediction_pipeline.run_pipeline()
+            lg.info('prediction completed . Downloading prediction file')
+            
+            return send_file(prediction_file_detail.prediction_file_path,
+                             download_name=prediction_file_detail.prediction_file_name,as_attachment= True)
+        else:
+            return render_template('upload_file.html')
+    except Exception as e:
+        raise CustomException(e,sys)
     
 
 if __name__ == "__main__":   
